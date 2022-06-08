@@ -1,4 +1,3 @@
-const path = require('path');
 const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
 
@@ -97,7 +96,8 @@ module.exports = {
 
   externals: {
     react: 'commonjs react',
+    'react-dom/client': 'commonjs react-dom/client',
     'react-dom': 'commonjs react-dom',
-    tslib: 'tslib'
-  }
+    tslib: 'tslib',
+  },
 };

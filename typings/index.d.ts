@@ -14,7 +14,7 @@
   limitations under the License.
 */
 
-declare module 'react-digraph' {
+declare module 'react-digraph-18' {
   export type INode = {
     title: string;
     x?: number | null;

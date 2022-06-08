@@ -16,8 +16,8 @@
 */
 
 import * as d3 from 'd3';
-import * as React from 'react';
-import ReactDOM from 'react-dom';
+import React from 'react';
+import { createRoot, Root } from 'react-dom/client';
 import '../styles/main.scss';
 import { LayoutEngines } from '../utilities/layout-engine/layout-engine-config';
 import { type IGraphViewProps } from './graph-view-props';
@@ -161,6 +161,7 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
   view: any;
   layoutEngine: any;
   mousePosition: IPoint;
+  rootsMap: WeakMap<HTMLElement | Element, Root>;
 
   constructor(props: IGraphViewProps) {
     super(props);
@@ -195,6 +196,8 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
       svgClicked: false,
       focused: true,
     };
+
+    this.rootsMap = new WeakMap();
   }
 
   componentDidMount() {
@@ -325,6 +328,17 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
     this.setState({
       componentUpToDate: true,
     });
+  }
+
+  getRoot(node: HTMLElement | Element): Root {
+    let root = this.rootsMap.get(node);
+
+    if (!root) {
+      root = createRoot(node);
+      this.rootsMap.set(node, root);
+    }
+
+    return root;
   }
 
   hasLayoutEngine() {
@@ -1613,11 +1627,13 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
       this.entities.appendChild(nodeContainer);
     }
 
-    // ReactDOM.render replaces the insides of an element This renders the element
+    // Root.render replaces the insides of an element This renders the element
     // into the nodeContainer
     const anyElement: any = element;
 
-    ReactDOM.render(anyElement, nodeContainer);
+    const root = this.getRoot(nodeContainer);
+    
+    root.render(anyElement);
   }
 
   renderConnectedEdgesFromNode(
@@ -1713,10 +1729,12 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
       edgeContainer = newSvgEdgeContainer;
     }
 
-    // ReactDOM.render replaces the insides of an element This renders the element
+    // Root.render replaces the insides of an element This renders the element
     // into the edgeContainer
     if (edgeContainer) {
-      ReactDOM.render(element, edgeContainer);
+      const root = this.getRoot(edgeContainer);
+
+      root.render(element);
 
       if (afterRenderEdge) {
         return afterRenderEdge(
@@ -1780,7 +1798,6 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
       showGraphControls,
       minZoom,
       maxZoom,
-      allowMultiselect,
     } = this.props;
     const { viewTransform } = this.state;
 
@@ -1788,16 +1805,16 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
       return;
     }
 
-    ReactDOM.render(
+    const root = this.getRoot(this.graphControlsWrapper);
+
+    root.render(
       <GraphControls
         minZoom={minZoom}
         maxZoom={maxZoom}
         zoomLevel={viewTransform ? viewTransform.k : 1}
         zoomToFit={this.handleZoomToFit}
         modifyZoom={this.modifyZoom}
-        allowMultiselect={allowMultiselect}
       />,
-      this.graphControlsWrapper
     );
   }
 
