@@ -1632,7 +1632,7 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
     const anyElement: any = element;
 
     const root = this.getRoot(nodeContainer);
-    
+
     root.render(anyElement);
   }
 
@@ -1794,11 +1794,7 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
    * without causing a full GraphView render.
    */
   renderGraphControls() {
-    const {
-      showGraphControls,
-      minZoom,
-      maxZoom,
-    } = this.props;
+    const { showGraphControls, minZoom, maxZoom } = this.props;
     const { viewTransform } = this.state;
 
     if (!showGraphControls || !this.graphControlsWrapper) {
@@ -1814,7 +1810,7 @@ class GraphView extends React.Component<IGraphViewProps, IGraphViewState> {
         zoomLevel={viewTransform ? viewTransform.k : 1}
         zoomToFit={this.handleZoomToFit}
         modifyZoom={this.modifyZoom}
-      />,
+      />
     );
   }
 

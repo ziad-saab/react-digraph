@@ -6,7 +6,7 @@ module.exports = {
   devtool: 'source-map',
   context: __dirname + '/src',
   entry: {
-    main: './index.tsx',
+    main: './index.js',
     css: './styles/main.scss'
   },
 
